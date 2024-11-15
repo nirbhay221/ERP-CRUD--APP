@@ -1,15 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Products.Core;
+using Products.DB;  // Ensure this matches the namespace in your class library
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services to the container
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add the AppDbContext with SQL Server configuration
+builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddTransient<IProductsServices, ProductsServices>();
+builder.Services.AddSwaggerDocument(settings =>
+{
+    settings.Title = "Products";
+});
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -19,7 +28,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseSwaggerUi();
 app.MapControllers();
 
 app.Run();
