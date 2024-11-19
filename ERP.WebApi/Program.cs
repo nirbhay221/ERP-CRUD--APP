@@ -16,6 +16,16 @@ builder.Services.AddSwaggerDocument(settings =>
 {
     settings.Title = "Products";
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ProductsPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -26,7 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("ProductsPolicy");
 app.UseAuthorization();
 app.UseSwaggerUi();
 app.MapControllers();
