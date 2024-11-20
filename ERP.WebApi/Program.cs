@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Products.Core;
-using Products.DB;  // Ensure this matches the namespace in your class library
+using Products.DB;
+using Projects.Core;
+using Projects.DB;  // Ensure this matches the namespace in your class library
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,7 @@ builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddTransient<IProductsServices, ProductsServices>();
 builder.Services.AddSwaggerDocument(settings =>
 {
-    settings.Title = "Products";
+    settings.Title = "Products & Projects";
 });
 builder.Services.AddCors(options =>
 {
@@ -25,6 +27,20 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+
+builder.Services.AddDbContext<ProjectDbContext>();
+builder.Services.AddTransient<IProjectsServices, ProjectsServices>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ProjectsPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -37,6 +53,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("ProductsPolicy");
+app.UseCors("ProjectsPolicy");
 app.UseAuthorization();
 app.UseSwaggerUi();
 app.MapControllers();
