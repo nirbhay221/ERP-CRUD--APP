@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Products.Core;
-using Products.DB;
+using Products.Core.DTO;
 
 namespace ERP.WebAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ProductsController : ControllerBase
@@ -28,7 +30,7 @@ namespace ERP.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct(Product product)
+        public IActionResult CreateProduct(Products.DB.Product product)
         {
             var newProduct = _productsServices.CreateProduct(product);
             return CreatedAtRoute("GetProduct", new { newProduct.Id }, newProduct);

@@ -1,4 +1,5 @@
-﻿using Products.DB;
+﻿
+using Products.Core.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Products.Core
     {
         List<Product> GetProducts();
         Product GetProduct(int id);
-        Product CreateProduct(Product product);
+        Product CreateProduct(DB.Product product);
         void DeleteProduct(Product product);
         Product EditProduct(Product product);
     }

@@ -1,45 +1,57 @@
-﻿using Products.DB;
+﻿using Microsoft.AspNetCore.Http;
+using Products.Core.DTO;
 
 namespace Products.Core
 {
     public class ProductsServices : IProductsServices
     {
-        private AppDbContext _context;
-        public ProductsServices(AppDbContext context)
+        private DB.AppDbContext _context;
+        private readonly DB.User _user;
+        public ProductsServices(DB.AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _user = _context.Users.First(u => u.Username == httpContextAccessor.HttpContext.User.Identity.Name);
+
+
         }
 
-        public Product CreateProduct(Product product)
+        public Product CreateProduct(DB.Product product)
         {
+            product.User = _user;
             _context.Add(product);
             _context.SaveChanges();
 
-            return product;
+            return (Product)product;
         }
 
         public void DeleteProduct(Product product)
         {
-            _context.Products.Remove(product);
+            var dbProduct = _context.Products.First(e => e.User.Id == _user.Id && e.Id == product.Id);
+
+            _context.Products.Remove(dbProduct);
             _context.SaveChanges(); 
         }
 
         public Product EditProduct(Product product)
         {
-            var dbExpense = _context.Products.First(e => e.Id == product.Id);
-            dbExpense.Description = product.Description;
-            dbExpense.Quantity = product.Quantity;
+            var dbProduct = _context.Products.First(e => e.User.Id == _user.Id && e.Id == product.Id);
+            dbProduct.Description = product.Description;
+            dbProduct.Quantity = product.Quantity;
             _context.SaveChanges();
-            return dbExpense;
+            return product;
         }
 
-        public Product GetProduct(int id)
-        {
-            return _context.Products.First(e => e.Id == id);    
-        }
+        public Product GetProduct(int id) =>
+        
+            _context.Products.Where(e => e.User.Id == _user.Id && e.Id == id)
+                .Select(e => (Product)e)
+                .First();
+        
         public List<Product> GetProducts()
-        {
-            return _context.Products.ToList();
-        }
+        =>
+
+            _context.Products.Where(e => e.User.Id == _user.Id)
+                .Select(e => (Product)e)
+                .ToList();
     }
 }

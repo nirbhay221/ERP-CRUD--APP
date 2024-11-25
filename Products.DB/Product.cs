@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Products.DB
 {
@@ -7,6 +8,9 @@ namespace Products.DB
         [Key] 
         public int Id { get; set; }
         public String Description {  get; set; }
-        public double Quantity { get; set; } 
+        public double Quantity { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
     }
 }
