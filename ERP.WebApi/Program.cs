@@ -57,6 +57,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<IStatisticsServices, StatisticsServices>();
 
 builder.Services.AddAuthentication(options =>
 {
