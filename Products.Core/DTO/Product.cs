@@ -6,7 +6,6 @@ namespace Products.Core.DTO
 {
     public class Product
     {
-        [Key]
         public int Id { get; set; }
         public String Description { get; set; }
         public double Quantity { get; set; }

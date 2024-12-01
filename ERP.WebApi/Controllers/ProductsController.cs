@@ -30,9 +30,15 @@ namespace ERP.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct(Products.DB.Product product)
+        public IActionResult CreateProduct(Product productDto)
         {
-            var newProduct = _productsServices.CreateProduct(product);
+            var dbProduct = new Products.DB.Product
+            {
+                Description = productDto.Description,
+                Quantity = productDto.Quantity
+            };
+
+            var newProduct = _productsServices.CreateProduct(dbProduct);
             return CreatedAtRoute("GetProduct", new { newProduct.Id }, newProduct);
         }
 
