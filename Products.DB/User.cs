@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace Products.DB
 {
@@ -9,6 +10,10 @@ namespace Products.DB
         public string Username {  get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
+
+        public ICollection<UserProject> UserProjects { get; set; }
+
+        public ICollection<Product> Products { get; set; }  
 
     }
 }

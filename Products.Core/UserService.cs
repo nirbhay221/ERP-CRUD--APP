@@ -22,7 +22,7 @@ namespace Products.Core
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<AuthenticatedUser> SignIn(User user)
+        public async Task<AuthenticatedUser> SignIn(DTO.User user)
         {
             var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
             if (dbUser == null || _passwordHasher.VerifyHashedPassword(dbUser.Password, user.Password) == Microsoft.AspNet.Identity.PasswordVerificationResult.Failed)
@@ -37,7 +37,7 @@ namespace Products.Core
             };
         }
 
-        public async Task<AuthenticatedUser> Signup(User user)
+        public async Task<AuthenticatedUser> Signup(DTO.User user)
         {
             var checkUser = await _context.Users.FirstOrDefaultAsync(u => u.Username.Equals(user.Username));
 
@@ -46,14 +46,19 @@ namespace Products.Core
                 throw new UserNameAlreadyExistsException("Username already exists");
 
             }
-            user.Password = _passwordHasher.HashPassword(user.Password);
-            await _context.AddAsync(user);
+            var dbUser = new Products.DB.User
+            {
+                Username = user.Username,
+                Password = _passwordHasher.HashPassword(user.Password), 
+                Email = user.Email
+            };
+            await _context.AddAsync(dbUser);
             await _context.SaveChangesAsync();
 
             return new AuthenticatedUser
             {
-                UserName = user.Username,
-                Token = JwtGenerator.GenerateUserToken(user.Username)
+                UserName = dbUser.Username,
+                Token = JwtGenerator.GenerateUserToken(dbUser.Username)
             };
         }
     }

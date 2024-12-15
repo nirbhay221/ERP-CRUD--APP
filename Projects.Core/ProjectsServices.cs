@@ -28,7 +28,6 @@ namespace Projects.Core
         {
             var dbExpense = _context.Projects.First(e => e.Id == project.Id);
             dbExpense.Description = project.Description;
-            dbExpense.Quantity = project.Quantity;
             _context.SaveChanges();
             return dbExpense;
         }

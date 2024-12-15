@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Products.Core;
 using Products.DB;
-using Projects.Core;
-using Projects.DB;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,9 +35,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<ProjectDbContext>();
-
-builder.Services.AddTransient<IProjectsServices, ProjectsServices>();
 
 var secret = Environment.GetEnvironmentVariable("JWT_SECRET");
 var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
@@ -58,6 +53,8 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IStatisticsServices, StatisticsServices>();
+builder.Services.AddTransient<IProjectsServices, ProjectsServices>();
+builder.Services.AddTransient<IEventsServices, EventsServices>();
 
 builder.Services.AddAuthentication(options =>
 {

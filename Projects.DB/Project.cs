@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Products.DB;
 
 namespace Projects.DB
 {
@@ -6,7 +7,9 @@ namespace Projects.DB
     {
         [Key]
         public int Id { get; set; }
+        public string Name { get; set; }
         public String Description { get; set; }
-        public double Quantity { get; set; }
+       // public ICollection<ProductProject> ProductProjects { get; set; }
+        public ICollection<UserProject> UserProjects { get; set; }
     }
 }

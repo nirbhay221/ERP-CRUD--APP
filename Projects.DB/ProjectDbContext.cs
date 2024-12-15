@@ -10,6 +10,7 @@ namespace Projects.DB
     public class ProjectDbContext : DbContext
     {
         public DbSet<Project> Projects { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

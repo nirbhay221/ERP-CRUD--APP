@@ -26,15 +26,22 @@ namespace ERP.WebAPI.Controllers
         [HttpGet("{id}", Name = "GetProduct")]
         public IActionResult GetProduct(int id)
         {
-            return Ok(_productsServices.GetProduct(id));
+            var product = _productsServices.GetProduct(id);
+            return Ok(product);
         }
 
         [HttpPost]
         public IActionResult CreateProduct(Product productDto)
         {
+            if(productDto == null)
+            {
+                return BadRequest("Invalid Product Data");
+            }
             var dbProduct = new Products.DB.Product
             {
+                Name = productDto.Name,
                 Description = productDto.Description,
+                LicenseType = (Products.DB.LicenseType)productDto.LicenseType,
                 Quantity = productDto.Quantity
             };
 
@@ -43,7 +50,11 @@ namespace ERP.WebAPI.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteProduct(Product product) { 
+        public IActionResult DeleteProduct(Product product) {
+            if (product == null)
+            {
+                return BadRequest("Invalid Product Data");
+            }
             _productsServices.DeleteProduct(product);
             return Ok();
         }
@@ -51,6 +62,10 @@ namespace ERP.WebAPI.Controllers
         [HttpPut]
         public IActionResult EditProduct(Product product)
         {
+            if (product == null)
+            {
+                return BadRequest("Invalid Product Data");
+            }
             return Ok(_productsServices.EditProduct(product));
         }
     }
