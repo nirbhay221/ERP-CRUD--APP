@@ -33,10 +33,11 @@ namespace ERP.WebAPI.Controllers
         [HttpPost]
         public IActionResult CreateProduct(Product productDto)
         {
-            if(productDto == null)
+            if (productDto == null)
             {
                 return BadRequest("Invalid Product Data");
             }
+
             var dbProduct = new Products.DB.Product
             {
                 Name = productDto.Name,
@@ -59,14 +60,17 @@ namespace ERP.WebAPI.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        public IActionResult EditProduct(Product product)
+        [HttpPut("{id}")]
+        public IActionResult EditProduct(int id, Product product)
         {
-            if (product == null)
+            if (product == null || id != product.Id)
             {
                 return BadRequest("Invalid Product Data");
             }
-            return Ok(_productsServices.EditProduct(product));
+
+            var updatedProduct = _productsServices.EditProduct(product);
+            return Ok(updatedProduct);
         }
+
     }
 }
